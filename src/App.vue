@@ -1,13 +1,17 @@
 <template>
-  <router-view></router-view>
+  <div id="app">
+    <img alt="Vue logo" src="./assets/logo.png">
+    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  </div>
 </template>
 
 <script>
-import Mixin from '@/components/Common'
+import HelloWorld from './components/HelloWorld.vue'
+
 export default {
   name: 'App',
-  mixins:[Mixin],
   components: {
+    HelloWorld
   }
 }
 </script>
