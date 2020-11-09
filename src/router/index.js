@@ -23,7 +23,16 @@ const routes = [
         path: 'luminance/org/flatten_contrast/:px',
         component:() => import('@/views/SabianLuminanceFlattenContrast.vue')
       },
-
+      {
+        name: 'sabian_luminance_org_twice',
+        path: 'luminance/org/twice/:px',
+        component:() => import('@/views/SabianLuminanceOrgTwice.vue')
+      },
+      {
+        name: 'sabian_luminance_org_flatten_contrast_twice',
+        path: 'luminance/org/flatten_contrast/twice/:px',
+        component:() => import('@/views/SabianLuminanceFlattenContrastTwice.vue')
+      },
     ]
   },
 ]

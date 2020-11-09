@@ -1,14 +1,14 @@
 <template>
   <div>
-    <div v-for="(data, history_count) in r.clusters_history" :key="history_count">
-      <div class="cell" :class="css.px" v-for="(image, image_key) in data" :key="image_key">
-        <div v-for="(color, row) in image" :key="row" :style="getStyle({type:'gray', color:color})"></div>
-      </div>
-    </div>
+    <div v-for="(r,i) in r2" :key="i">
+      <!--<div v-for="(data, history_count) in r.clusters_history" :key="history_count">
+        <div class="cell" :class="css.px" v-for="(image, image_key) in data" :key="image_key">
+          <div v-for="(color, row) in image" :key="row" :style="getStyle({type:'gray', color:color})"></div>
+        </div>
+      </div>-->
 
-    <table>
-      <tr v-for="(image_keys, cluster_key) in r.image_groups" :key="cluster_key">
-        <div v-if="image_keys.length>0">
+      <table>
+        <tr v-for="(images, cluster_key) in r.image_groups" :key="cluster_key">
           <td>
             <div class="cell" :class="css.px">
               <div v-for="(color, px) in r.last_clusters[cluster_key]" :key="px" :style="getStyle({type:'gray', color:color})"></div>
@@ -16,18 +16,18 @@
           </td>
           <td>
             <div>
-              <div class="cell" :class="css.px" v-for="image_key in image_keys" :key="image_key">
-                <div v-for="(color, px) in r.data[image_key]" :key="px" :style="getStyle({type:'gray', color:color})"></div>
+              <div class="cell" :class="css.px" v-for="(image, image_key) in images" :key="image_key">
+                <div v-for="(color, px) in image" :key="px" :style="getStyle({type:'gray', color:color})"></div>
               </div>
             </div>
             <div>
-              <div class="cell" :class="css.px" v-for="image_key in image_keys" :key="image_key" :style="getStyle({type:'sabian', image_key:image_key})">
+              <div class="cell" :class="css.px" v-for="(image, image_key) in images" :key="image_key" :style="getStyle({type:'sabian', image_key:image_key})">
               </div>
             </div>
           </td>
-        </div>
-      </tr>
-    </table>
+        </tr>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -40,7 +40,7 @@ export default {
 
   data(){
     return{
-      r: {},
+      r2: {},
       css:{
         px: 'px' + window.px
       }
@@ -52,7 +52,6 @@ export default {
   },
 
   methods: {
-
     mount(){
       const axios = require('axios')
       axios.get('https://opale-sabian.s3-ap-northeast-1.amazonaws.com/data/'+window.px+'px/luminance_org.json')
@@ -62,16 +61,29 @@ export default {
           }
           let a = new Analyze(opt)
 
-          a.setDefaultClusters(4, window.px**2)
+          a.setDefaultClusters(10, window.px**2)
           a.calcClustering(3)
           a.setImageGroups()
 
-          this.r = {
-            data: a.data,
-            clusters_history: a.clusters_history,
-            image_groups: a.image_groups,
-            last_clusters: a.getLastClusters(),
-          }
+          let r2 = {}
+          Object.keys(a.image_groups).forEach(i=>{
+            let image_group = a.image_groups[i]
+            let a2 = new Analyze({data: image_group})
+
+            a2.setDefaultClusters(10, window.px**2)
+            a2.calcClustering(3)
+            a2.setImageGroups()
+
+            r2[i] = {
+              data: a2.data,
+              clusters_history: a2.clusters_history,
+              image_groups: a2.image_groups,
+              last_clusters: a2.getLastClusters(),
+            }
+
+          })
+
+          this.r2 = r2
 
         }).catch(err => {
           console.log('err:', err)
@@ -91,12 +103,6 @@ export default {
 
           let new_color = (max===min) ? max : (color-min) / (max-min) * 255
 
-/*
-          //let break_point1 = 255 * 0.8
-          //let break_point2 = 255 * 0.2
-          let break_point1 = (max + average) * 0.5
-          let break_point2 = (min + average) * 0.5
-          new_color = new_color > break_point1 ? 255 : (new_color < break_point2 ? 0 : 127)*/
           new_image.push(new_color)
         })
 

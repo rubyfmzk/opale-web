@@ -3,6 +3,7 @@ export default{
     getImage: function(image_key){
       return ';background-image:url(https://opale-sabian.s3-ap-northeast-1.amazonaws.com/base_image/'+(image_key+1).zeroPadding(3)+'.jpg)'
     },
+
     getGrayBackground: function(color){
       return ';background-color:rgb('+color.int()+','+color.int()+','+color.int()+')'
     },
@@ -70,5 +71,8 @@ export default{
       window.centers_class = centers_class
       return centers_class
     },
+
+
+
   }
 }

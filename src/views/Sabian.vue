@@ -1,13 +1,12 @@
 <template>
-  <router-view :rr="r"></router-view>
+  <router-view></router-view>
 </template>
 
 <script>
-
-
 export default {
   data(){
     return{
+/*
       r:{
         data: [],
         centers_history: [],
@@ -16,35 +15,17 @@ export default {
         css:{
           px: 'px' + window.px,
         },
-      }
+      }*/
     }
   },
 
   created(){
+
     window.px = this.$route.params.px
-    window.default_centers = getDefaultCenters(5, window.px**2)
-    window.centers_history = [ window.default_centers ]
-    this.r.css.px = 'px' + window.px
   }
 
 }
 
-function getDefaultCenters(count, row){
-  console.log(count, row)
-  return [...Array( count )].map(() => [...Array( row )].map(() => Math.random() * 255))
-/*
-  return [
-    [0,255,255,255,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0,],
-    [0,0,0,0,0, 0,0,255,0,0, 0,0,255,0,0, 0,0,0,0,0, 0,0,0,0,0,],
-    [0,0,0,0,0, 0,0,0,0,0, 255,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0,],
-    [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,255, 0,0,0,0,0, 0,0,0,0,0,],
-    [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,255,0,0, 0,0,255,0,0,],
-    [0,0,0,0,0, 0,0,0,0,0, 0,255,0,255,0, 0,255,0,255,0, 0,0,0,0,0,],
-    [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0,],
-    [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0,],
-  ]*/
-
-}
 </script>
 
 <style>
